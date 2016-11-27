@@ -1,8 +1,6 @@
 import java.util.Scanner;
 import java.util.Stack;
 
-//import TenKindsOfPeople.PeopleNode;
-
 public class TenKindsOfPeople 
 {
 	private static class PeopleNode 
@@ -17,7 +15,6 @@ public class TenKindsOfPeople
 				number= num;
 				xCoordinate= xCoord;
 				yCoordinate= yCoord;
-				
 			}
 			
 			
@@ -26,18 +23,6 @@ public class TenKindsOfPeople
 				valid=true;
 				onStack=false;
 			}
-			public  int getNum()
-			{
-				return number;
-			}
-			/*public int getXCoord()
-			{
-				return xCoordinate;
-			}
-			public int getYCoord()
-			{
-				return yCoordinate;
-			}*/
 			
 			public boolean isOnStack()
 			{
@@ -70,14 +55,15 @@ public class TenKindsOfPeople
 		
 		int numQueries= sc.nextInt();
 		Stack<PeopleNode> st;
+		boolean cont=true;
 		for(int y=0; y<numQueries; y++)
 		{	
 			xStart=sc.nextInt();
 			yStart= sc.nextInt();
 			xEnd= sc.nextInt();
 			yEnd= sc.nextInt();
-			int startNum= (matrix[xStart][yStart]).getNum();
-			int endNum= (matrix[xEnd][yEnd].getNum());
+			int startNum= (matrix[xStart][yStart]).number;
+			int endNum= (matrix[xEnd][yEnd].number);
 			if(startNum!=endNum)
 				System.out.println("neither");
 			else
@@ -93,68 +79,60 @@ public class TenKindsOfPeople
 					}
 				}
 				st= new Stack<>();
+				cont=true;
 				st.push(matrix[xStart][yStart]);
-				
-				tester(matrix,st,startNum,xEnd,yEnd);
+				while(cont)
+				{
+					if(st.isEmpty()){
+						System.out.println("neither");
+						cont=false;}
+					else{
+						PeopleNode temp=st.pop();
+						temp.onStack= true;
+						int xCoord=temp.xCoordinate;
+						int yCoord= temp.yCoordinate;
+						
+						if((xCoord==xEnd)&&(yCoord==yEnd))
+						{
+							st.clear();
+							cont=false;
+							if (startNum==0)
+								System.out.println("binary");//System.out.println("binary");
+							else
+								System.out.println("decimal");//System.out.println("decimal");
+						}			
+						else
+						{
+							
+							if((temp.number!=startNum)||(((matrix[xCoord+1][yCoord]==null||matrix[xCoord+1][yCoord].valid==false)&&(matrix[xCoord-1][yCoord]==null||matrix[xCoord-1][yCoord].valid==false)&&(matrix[xCoord][yCoord-1]==null||matrix[xCoord][yCoord-1].valid==false)&&(matrix[xCoord][yCoord+1]==null||matrix[xCoord][yCoord+1].valid==false))))
+							{
+								temp.valid=false;
+							}
+							
+								if((matrix[xCoord][yCoord-1]!=null)&&matrix[xCoord][yCoord-1].valid&&matrix[xCoord][yCoord-1].isOnStack()==false&&matrix[xCoord][yCoord-1].number==startNum)
+								{	st.push(matrix[xCoord][yCoord-1]);
+									matrix[xCoord][yCoord-1].onStack=true;
+								}
+								if(matrix[xCoord-1][yCoord]!=null&&matrix[xCoord-1][yCoord].valid&&matrix[xCoord-1][yCoord].isOnStack()==false&&matrix[xCoord-1][yCoord].number==startNum)
+								{	
+									st.push(matrix[xCoord-1][yCoord]);
+									matrix[xCoord-1][yCoord].onStack=true;
+								}
+								if(matrix[xCoord+1][yCoord]!=null&&matrix[xCoord+1][yCoord].valid&&matrix[xCoord+1][yCoord].isOnStack()==false&&matrix[xCoord+1][yCoord].number==startNum)
+								{
+									st.push(matrix[xCoord+1][yCoord]);
+									matrix[xCoord+1][yCoord].onStack=true;
+								}
+								if(matrix[xCoord][yCoord+1]!=null&&matrix[xCoord][yCoord+1].valid&&matrix[xCoord][yCoord+1].isOnStack()==false&&matrix[xCoord][yCoord+1].number==startNum)
+								{
+									st.push(matrix[xCoord][yCoord+1]);
+									matrix[xCoord][yCoord+1].onStack=true;
+								}	
+						}
+					}
+				}
 			}
 		}
 		sc.close();
 	}
-	
-
-	
-	
-	public static void tester(PeopleNode[][] matrix,Stack<PeopleNode> sta, int startNum,int xEnd,int yEnd)
-	{
-		
-		if(sta.isEmpty())
-			System.out.println("neither");
-		else{
-			PeopleNode temp=sta.pop();
-			temp.onStack= true;
-			int xCoord=temp.xCoordinate;
-			int yCoord= temp.yCoordinate;
-			
-			if((xCoord==xEnd)&&(yCoord==yEnd))
-			{
-				sta.clear();
-				if (startNum==0)
-					System.out.println("binary");//System.out.println("binary");
-				else
-					System.out.println("decimal");//System.out.println("decimal");
-				
-				
-			}			
-			else
-			{
-				
-				if((temp.getNum()!=startNum)||(((matrix[xCoord+1][yCoord]==null||matrix[xCoord+1][yCoord].valid==false)&&(matrix[xCoord-1][yCoord]==null||matrix[xCoord-1][yCoord].valid==false)&&(matrix[xCoord][yCoord-1]==null||matrix[xCoord][yCoord-1].valid==false)&&(matrix[xCoord][yCoord+1]==null||matrix[xCoord][yCoord+1].valid==false))))
-				{
-					temp.valid=false;
-				}
-				
-					if((matrix[xCoord][yCoord-1]!=null)&&matrix[xCoord][yCoord-1].valid&&matrix[xCoord][yCoord-1].isOnStack()==false&&matrix[xCoord][yCoord-1].getNum()==startNum)
-					{	sta.push(matrix[xCoord][yCoord-1]);
-						matrix[xCoord][yCoord-1].onStack=true;
-					}
-					if(matrix[xCoord-1][yCoord]!=null&&matrix[xCoord-1][yCoord].valid&&matrix[xCoord-1][yCoord].isOnStack()==false&&matrix[xCoord-1][yCoord].getNum()==startNum)
-					{	
-						sta.push(matrix[xCoord-1][yCoord]);
-						matrix[xCoord-1][yCoord].onStack=true;
-					}
-					if(matrix[xCoord+1][yCoord]!=null&&matrix[xCoord+1][yCoord].valid&&matrix[xCoord+1][yCoord].isOnStack()==false&&matrix[xCoord+1][yCoord].getNum()==startNum)
-					{
-						sta.push(matrix[xCoord+1][yCoord]);
-						matrix[xCoord+1][yCoord].onStack=true;
-					}
-					if(matrix[xCoord][yCoord+1]!=null&&matrix[xCoord][yCoord+1].valid&&matrix[xCoord][yCoord+1].isOnStack()==false&&matrix[xCoord][yCoord+1].getNum()==startNum)
-					{
-						sta.push(matrix[xCoord][yCoord+1]);
-						matrix[xCoord][yCoord+1].onStack=true;
-					}	
-				tester(matrix,sta, startNum, xEnd, yEnd);
-			}
-		}	
-	}
 }
-
