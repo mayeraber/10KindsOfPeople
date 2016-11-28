@@ -1,8 +1,74 @@
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.nio.Buffer;
 import java.util.Scanner;
 import java.util.Stack;
-
+import java.util.StringTokenizer;
 public class TenKindsOfPeople 
 {
+	
+	private static class Kattio extends PrintWriter {
+	    public Kattio(InputStream i) {
+	        super(new BufferedOutputStream(System.out));
+	        r = new BufferedReader(new InputStreamReader(i));
+	    }
+	    public Kattio(InputStream i, OutputStream o) {
+	        super(new BufferedOutputStream(o));
+	        r = new BufferedReader(new InputStreamReader(i));
+	    }
+
+	    public boolean hasMoreTokens() {
+	        return peekToken() != null;
+	    }
+
+	    public int getInt() {
+	        return Integer.parseInt(nextToken());
+	    }
+
+	    public double getDouble() {
+	        return Double.parseDouble(nextToken());
+	    }
+
+	    public long getLong() {
+	        return Long.parseLong(nextToken());
+	    }
+
+	    public String getWord() {
+	        return nextToken();
+	    }
+
+
+
+	    private BufferedReader r;
+	    private String line;
+	    private StringTokenizer st;
+	    private String token;
+
+	    private String peekToken() {
+	        if (token == null)
+	            try {
+	                while (st == null || !st.hasMoreTokens()) {
+	                    line = r.readLine();
+	                    if (line == null) return null;
+	                    st = new StringTokenizer(line);
+	                }
+	                token = st.nextToken();
+	            } catch (IOException e) { }
+	        return token;
+	    }
+
+	    private String nextToken() {
+	        String ans = peekToken();
+	        token = null;
+	        return ans;
+	    }
+	}
+	
 	private static class PeopleNode 
 	{
 			int number;
@@ -32,19 +98,22 @@ public class TenKindsOfPeople
 	
 	public static void main(String[] args) 
 	{
-		Scanner sc= new Scanner(System.in);
-		int rows= sc.nextInt();
-		int cols= sc.nextInt();
-		sc.nextLine();
+		Kattio kattio= new Kattio(System.in,System.out);
+		//BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
+		//StringTokenizer strT= new StringTokenizer(br.readLine());
+		//Scanner sc= new Scanner(System.in);
+		int rows= kattio.getInt();
+		int cols= kattio.getInt();
+		//sc.nextLine();
 		int xStart, yStart, xEnd, yEnd;
 		PeopleNode[][] matrix= new PeopleNode[rows+2][cols+2];
 		String nextRow="";
 		String str;
 		for(int row=1; row<=rows;row++)
 		{
-			if(sc.hasNextLine())
+			if(kattio.hasMoreTokens())
 			{
-				nextRow=""+ sc.nextLine();
+				nextRow=""+ kattio.nextToken();
 				for(int col=1; col<=cols; col++)
 				{
 					str="";
@@ -53,19 +122,19 @@ public class TenKindsOfPeople
 			}
 		}
 		
-		int numQueries= sc.nextInt();
+		int numQueries= kattio.getInt();
 		Stack<PeopleNode> st;
 		boolean cont=true;
 		for(int y=0; y<numQueries; y++)
 		{	
-			xStart=sc.nextInt();
-			yStart= sc.nextInt();
-			xEnd= sc.nextInt();
-			yEnd= sc.nextInt();
+			xStart=kattio.getInt();
+			yStart=kattio.getInt();
+			xEnd= kattio.getInt();
+			yEnd= kattio.getInt();
 			int startNum= (matrix[xStart][yStart]).number;
 			int endNum= (matrix[xEnd][yEnd].number);
 			if(startNum!=endNum)
-				System.out.println("neither");
+				kattio.println("neither");
 			else
 			{
 				if(y>0)
@@ -84,7 +153,7 @@ public class TenKindsOfPeople
 				while(cont)
 				{
 					if(st.isEmpty()){
-						System.out.println("neither");
+						kattio.println("neither");
 						cont=false;}
 					else{
 						PeopleNode temp=st.pop();
@@ -97,9 +166,9 @@ public class TenKindsOfPeople
 							st.clear();
 							cont=false;
 							if (startNum==0)
-								System.out.println("binary");//System.out.println("binary");
+								kattio.println("binary");//System.out.println("binary");
 							else
-								System.out.println("decimal");//System.out.println("decimal");
+								kattio.println("decimal");//System.out.println("decimal");
 						}			
 						else
 						{
@@ -133,6 +202,6 @@ public class TenKindsOfPeople
 				}
 			}
 		}
-		sc.close();
+		kattio.close();
 	}
 }
